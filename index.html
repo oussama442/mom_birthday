@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Responsive Candle</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #1e293b;
+      --candle: #ffffff;
+      --flame: #ffb300;
+      --flame-glow: #fdd835;
+      --stand: #0f172a;
+    }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Arial', sans-serif;
+      color: white;
+    }
+
+    .candle {
+      position: relative;
+      width: 20vmin;
+      height: 50vmin;
+      background: var(--candle);
+      border-radius: 1.5vmin;
+    }
+
+    .candle-flame {
+      position: absolute;
+      top: -8vmin;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 7vmin;
+      height: 10vmin;
+      background: var(--flame);
+      border-radius: 50%;
+      box-shadow: 0 0 3vmin 1vmin var(--flame-glow);
+      transition: opacity 0.1s ease, transform 0.2s ease-in-out;
+    }
+
+    .candle-wick {
+      position: absolute;
+      top: -1.2vmin;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0.5vmin;
+      height: 1.2vmin;
+      background: black;
+    }
+
+    .candle-stand {
+      position: absolute;
+      bottom: -3vmin;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 25vmin;
+      height: 3vmin;
+      background: var(--stand);
+      border-radius: 1vmin;
+    }
+
+    .confetti {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      display: none;
+    }
+
+    .popup-card {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.popup-card h2, .popup-card p {
+  color: black; /* Change text color to black */
+}
+
+    .instruction {
+      position: absolute;
+      top: 10%;
+      font-size: 2rem;
+      text-align: center;
+      width: 100%;
+      z-index: 20;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="instruction">اضغط بسرعة 5 مرات!</div>
+  <div class="candle" id="candle">
+    <div class="candle-flame" id="flame"></div>
+    <div class="candle-wick"></div>
+    <div class="candle-stand"></div>
+  </div>
+  <div class="confetti" id="confetti"></div>
+  <div class="popup-card" id="popupCard">
+    <h2>Happy Birthday Mom!</h2>
+    <p>Love you always! 🎉</p>
+  </div>
+
+  <audio id="blowSound" src="puff-sound.mp3" preload="auto"></audio>
+
+  <script>
+    const candle = document.getElementById("candle");
+    const flame = document.getElementById("flame");
+    const confetti = document.getElementById("confetti");
+    const popupCard = document.getElementById("popupCard");
+    const blowSound = document.getElementById("blowSound");
+
+    let clickCount = 0;
+    const maxClicks = 5; // Change to 5 clicks for the "blow out"
+    let isBlownOut = false;
+
+    candle.addEventListener("click", () => {
+      if (isBlownOut) return;
+
+      clickCount++;
+
+      // Add dynamic flicker on each click
+      flickerFlame();
+
+      if (clickCount >= maxClicks) {
+        blowOutCandle();
+      }
+    });
+
+    function flickerFlame() {
+      // Add a flame flicker effect on each click by changing opacity and scale
+      flame.style.opacity = Math.random() > 0.5 ? 1 : 0.7;
+      flame.style.transform = `translateX(-50%) scaleY(${1 + Math.random() * 0.1}) rotate(${Math.random() * 5 - 2}deg)`;
+    }
+
+    function blowOutCandle() {
+      isBlownOut = true;
+      flame.style.opacity = 0;
+      flame.style.transform = "scaleY(0) rotate(0deg)";
+
+      // Play puff sound
+      blowSound.play();
+
+      // Show confetti
+      confetti.style.display = "block";
+      setTimeout(() => {
+        confetti.style.display = "none";
+      }, 3000);
+
+      // Show the love letter popup
+      setTimeout(() => {
+        popupCard.style.display = "block";
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
