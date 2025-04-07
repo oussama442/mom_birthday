@@ -17,9 +17,10 @@
       --stand: #0f172a;
     }
 
-  body {
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
+body {
+  touch-action: none; /* Disables pinch zoom */
+  -webkit-tap-highlight-color: transparent; /* Removes tap highlight */
+  overscroll-behavior: contain; /* Prevents pull-to-refresh */
 }
 
     
@@ -127,7 +128,7 @@
 
   <audio id="blowSound" src="puff-sound.mp3" preload="auto"></audio>
 
- <script>
+<script>
   const candle = document.getElementById("candle");
   const flame = document.getElementById("flame");
   const confetti = document.getElementById("confetti");
@@ -138,19 +139,18 @@
   const maxClicks = 5;
   let isBlownOut = false;
 
-  // 👇 Unified tap/click handler
-  function handleTap(e) {
-    e.preventDefault();
-
+  // 👇 pointerdown works on all devices (touch + mouse)
+  candle.addEventListener("pointerdown", () => {
     if (isBlownOut) return;
 
     clickCount++;
     flickerFlame();
 
-    if (clickCount >= maxClicks) blowOutCandle();
-  }
+    if (clickCount >= maxClicks) {
+      blowOutCandle();
+    }
+  });
 
-  // 👇 Flicker animation
   function flickerFlame() {
     flame.style.opacity = Math.random() > 0.5 ? 1 : 0.7;
     flame.style.transform = `translateX(-50%) scaleY(${1 + Math.random() * 0.1}) rotate(${Math.random() * 5 - 2}deg)`;
@@ -164,16 +164,10 @@
 
     confetti.style.display = "block";
     setTimeout(() => confetti.style.display = "none", 3000);
-
-    setTimeout(() => {
-      popupCard.style.display = "block";
-    }, 1000);
+    setTimeout(() => popupCard.style.display = "block", 1000);
   }
-
-  // 👇 Proper touch/mouse support
-  candle.addEventListener("touchstart", handleTap, { passive: false });
-  candle.addEventListener("mousedown", handleTap);
 </script>
+
 
 </body>
 </html>
