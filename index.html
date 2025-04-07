@@ -127,7 +127,7 @@ body {
   </div>
 
   <audio id="blowSound" src="puff-sound.mp3" preload="auto"></audio>
-<audio id="blowSound" src="puff-sound.mp3" preload="auto" playsinline></audio>
+<audio id="birthdayMusic" src="happy-birthday.mp3" preload="auto"></audio>
 
 <script>
   const candle = document.getElementById("candle");
@@ -167,6 +167,9 @@ body {
     setTimeout(() => confetti.style.display = "none", 3000);
     setTimeout(() => popupCard.style.display = "block", 1000);
   }
+  blowSound.currentTime = 0;
+blowSound.play().catch(err => console.log("Puff sound failed:", err));
+
 </script>
 
 
