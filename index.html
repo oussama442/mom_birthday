@@ -157,6 +157,16 @@
       flame.style.transform = `translateX(-50%) scaleY(${1 + Math.random() * 0.1}) rotate(${Math.random() * 5 - 2}deg)`;
     }
 
+let lastTouchTime = 0;
+document.addEventListener('touchstart', function (event) {
+  const now = new Date().getTime();
+  if (now - lastTouchTime <= 500) {
+    event.preventDefault(); // cancel double tap zoom
+  }
+  lastTouchTime = now;
+}, { passive: false });
+
+    
     function blowOutCandle() {
       isBlownOut = true;
       flame.style.opacity = 0;
