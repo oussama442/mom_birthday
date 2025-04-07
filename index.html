@@ -127,66 +127,53 @@
 
   <audio id="blowSound" src="puff-sound.mp3" preload="auto"></audio>
 
-  <script>
-    const candle = document.getElementById("candle");
-    const flame = document.getElementById("flame");
-    const confetti = document.getElementById("confetti");
-    const popupCard = document.getElementById("popupCard");
-    const blowSound = document.getElementById("blowSound");
+ <script>
+  const candle = document.getElementById("candle");
+  const flame = document.getElementById("flame");
+  const confetti = document.getElementById("confetti");
+  const popupCard = document.getElementById("popupCard");
+  const blowSound = document.getElementById("blowSound");
 
-    let clickCount = 0;
-    const maxClicks = 5; // Change to 5 clicks for the "blow out"
-    let isBlownOut = false;
+  let clickCount = 0;
+  const maxClicks = 5;
+  let isBlownOut = false;
 
-function handleTap() {
-  if (isBlownOut) return;
+  // 👇 Unified tap/click handler
+  function handleTap(e) {
+    e.preventDefault();
 
-  clickCount++;
-  flickerFlame();
+    if (isBlownOut) return;
 
-  if (clickCount >= maxClicks) blowOutCandle();
-}
+    clickCount++;
+    flickerFlame();
 
-// Works on both mobile (touchstart) and desktop (mousedown)
-candle.addEventListener("touchstart", handleTap);
-candle.addEventListener("mousedown", handleTap);
-
-
-    function flickerFlame() {
-      // Add a flame flicker effect on each click by changing opacity and scale
-      flame.style.opacity = Math.random() > 0.5 ? 1 : 0.7;
-      flame.style.transform = `translateX(-50%) scaleY(${1 + Math.random() * 0.1}) rotate(${Math.random() * 5 - 2}deg)`;
-    }
-
-let lastTouchTime = 0;
-document.addEventListener('touchstart', function (event) {
-  const now = new Date().getTime();
-  if (now - lastTouchTime <= 500) {
-    event.preventDefault(); // cancel double tap zoom
+    if (clickCount >= maxClicks) blowOutCandle();
   }
-  lastTouchTime = now;
-}, { passive: false });
 
-    
-    function blowOutCandle() {
-      isBlownOut = true;
-      flame.style.opacity = 0;
-      flame.style.transform = "scaleY(0) rotate(0deg)";
+  // 👇 Flicker animation
+  function flickerFlame() {
+    flame.style.opacity = Math.random() > 0.5 ? 1 : 0.7;
+    flame.style.transform = `translateX(-50%) scaleY(${1 + Math.random() * 0.1}) rotate(${Math.random() * 5 - 2}deg)`;
+  }
 
-      // Play puff sound
-      blowSound.play();
+  function blowOutCandle() {
+    isBlownOut = true;
+    flame.style.opacity = 0;
+    flame.style.transform = "scaleY(0) rotate(0deg)";
+    blowSound.play();
 
-      // Show confetti
-      confetti.style.display = "block";
-      setTimeout(() => {
-        confetti.style.display = "none";
-      }, 3000);
+    confetti.style.display = "block";
+    setTimeout(() => confetti.style.display = "none", 3000);
 
-      // Show the love letter popup
-      setTimeout(() => {
-        popupCard.style.display = "block";
-      }, 1000);
-    }
-  </script>
+    setTimeout(() => {
+      popupCard.style.display = "block";
+    }, 1000);
+  }
+
+  // 👇 Proper touch/mouse support
+  candle.addEventListener("touchstart", handleTap, { passive: false });
+  candle.addEventListener("mousedown", handleTap);
+</script>
+
 </body>
 </html>
